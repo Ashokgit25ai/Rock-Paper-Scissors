@@ -9,7 +9,15 @@
     <button onclick="playGame('rock')">Rock</button>
     <button onclick="playGame('paper')">Paper</button>
     <button onclick="playGame('scissors')">Scissors</button>
+    <button onclick="resetButton()">Reset Score</button>
     <script>
+      let score = JSON.parse(localStorage.getItem("score")) || {
+          wins:0,
+          loses:0,
+          ties:0
+      }
+
+
       function playGame(playerMove) {
         const computerGuess = pickComputerMove();
         let result = "";
@@ -21,12 +29,7 @@
           } else if (computerGuess === "Scissors") {
             result = `Tie`;
           }
-          alert(
-            `You Pick ${playerMove}. Computer Pick ${computerGuess}. ${result}`,
-          );
         } else if (playerMove === "paper") {
-          const computerGuess = pickComputerMove();
-          let result = "";
           if (computerGuess === "Rock") {
             result = `You win`;
           } else if (computerGuess === "Paper") {
@@ -34,12 +37,7 @@
           } else if (computerGuess === "Scissors") {
             result = `You lose`;
           }
-          alert(
-            `You Pick ${playerMove}. Computer Pick ${computerGuess}. ${result}`,
-          );
         } else if (playerMove === "rock") {
-          const computerGuess = pickComputerMove();
-          let result = "";
           if (computerGuess === "Rock") {
             result = `You win`;
           } else if (computerGuess === "Paper") {
@@ -47,11 +45,33 @@
           } else if (computerGuess === "Scissors") {
             result = `You lose`;
           }
-          alert(
-            `You Pick ${playerMove}. Computer Pick ${computerGuess}. ${result}`,
-          );
         }
+
+        if (result === "You win") {
+          score.wins += 1;
+        } else if (result === "You lose") {
+          score.loses += 1;
+        } else if (result === "Tie") {
+          score.ties += 1;
+        }
+
+        localStorage.setItem("score",JSON.stringify(score));
+
+
+        alert(
+          `You Pick ${playerMove} Computer Pick ${computerGuess} ${result}.
+Wins:${score.wins} Loses:${score.loses} Ties:${score.ties}`,
+        );
       }
+
+
+      function resetButton() {
+        score.wins = 0,
+        score.loses = 0,
+        score.ties = 0,
+        localStorage.removeItem("score")
+      }
+   
 
       function pickComputerMove() {
         const random_number = Math.random();
